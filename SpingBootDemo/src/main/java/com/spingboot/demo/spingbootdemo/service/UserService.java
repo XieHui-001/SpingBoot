@@ -31,4 +31,12 @@ public class UserService {
     public User register(User user){
         return userRepository.save(user);
     }
+
+    /**
+     * 删除指定用户
+     * @param id 用户ID
+     */
+    public void deleteUser(Long id){
+         userRepository.deleteById(id);
+    }
 }

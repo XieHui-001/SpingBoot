@@ -17,6 +17,6 @@ public class RegisterBean {
         this.password = password;
     }
 
-    String name;
-    String password;
+   private String name;
+   private String password;
 }
