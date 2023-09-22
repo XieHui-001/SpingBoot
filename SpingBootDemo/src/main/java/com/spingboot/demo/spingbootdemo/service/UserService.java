@@ -23,6 +23,11 @@ public class UserService {
         return userRepository.findUserByName(name);
     }
 
+    /**
+     * 注册
+     * @param user 需要注册的用户信息
+     * @return
+     */
     public User register(User user){
         return userRepository.save(user);
     }
