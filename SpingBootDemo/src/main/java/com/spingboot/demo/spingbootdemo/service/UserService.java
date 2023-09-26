@@ -39,4 +39,14 @@ public class UserService {
     public void deleteUser(Long id){
          userRepository.deleteById(id);
     }
+
+    /**
+     *
+     * @param state 用户状态
+     * @param id 用户ID
+     * @return 修改后的用户数据
+     */
+    public Integer updateUserState(Integer state,Long id){
+        return userRepository.updateUserStateById(state,id);
+    }
 }

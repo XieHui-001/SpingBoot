@@ -70,6 +70,25 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version> <!-- 适用于Java 11及更高版本 -->
+        </dependency>
+
+
     </dependencies>
 
     <build>

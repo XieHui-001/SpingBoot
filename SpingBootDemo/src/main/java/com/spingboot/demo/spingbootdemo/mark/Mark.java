@@ -5,7 +5,10 @@ public class Mark {
     public static final Integer ERROR_USER_INFO = 1001;
     public static final Integer ERROR_NOT_USER = 1002;
     public static final Integer ERROR_USER_REGISTER = 1003;
-
+    /**
+     * token 错误或者过期通用错误码
+     */
+    public static final Integer ERROR_TOKEN_EXPIRES = 1004;
     public static final Integer ERROR_DEFAULT = 1005;
 
     public static final String ERROR_USER_INFO_MSG = "用户信息错误！";

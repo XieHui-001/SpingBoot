@@ -19,11 +19,8 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class RegisterController {
     private final UserService userService;
-
     @Autowired
-    public RegisterController(UserService userService) {
-        this.userService = userService;
-    }
+    public RegisterController(UserService userService) {this.userService = userService;}
 
     @PostMapping("/register")
     public <T> ResponseEntity<BaseResponse<T>> register(@RequestBody(required = false) RegisterBody registerBody) {

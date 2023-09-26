@@ -4,16 +4,14 @@ import com.spingboot.demo.spingbootdemo.body.BaseIdBody;
 import com.spingboot.demo.spingbootdemo.body.BasePageBody;
 import com.spingboot.demo.spingbootdemo.bean.Product;
 import com.spingboot.demo.spingbootdemo.mark.Mark;
+import com.spingboot.demo.spingbootdemo.redis.RedisService;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.ProductService;
+import com.spingboot.demo.spingbootdemo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -29,8 +27,13 @@ public class ProductController {
     }
 
     @PostMapping("/query")
-    public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody) {
-        if (pageBody.getId() == null || pageBody.getSize() == null || pageBody.getSize() <= 0) {
+    public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody,
+                                                               @RequestHeader(value = "token", required = false) String authToken) {
+        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken)){
+            return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
+        }
+
+        if (pageBody == null || pageBody.getId() == null || pageBody.getSize() == null || pageBody.getSize() <= 0) {
             return ResponseUtils.responseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
         }
 
@@ -44,7 +47,11 @@ public class ProductController {
     }
 
     @PostMapping("/deleteById")
-    public <T> ResponseEntity<BaseResponse<T>> deleteProductById(@RequestBody(required = false) BaseIdBody body){
+    public <T> ResponseEntity<BaseResponse<T>> deleteProductById(@RequestBody(required = false) BaseIdBody body,
+                                                                 @RequestHeader(value = "token", required = false) String authToken){
+        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken)){
+            return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
+        }
         if (body == null || body.getId() == null){
             return ResponseUtils.responseError("操作失败Id不能为空",null,Mark.ERROR_DEFAULT);
         }
