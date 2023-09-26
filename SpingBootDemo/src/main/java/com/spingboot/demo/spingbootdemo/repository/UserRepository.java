@@ -14,5 +14,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.state =:state WHERE u.id =:id")
-    Integer updateUserStateById(@Param("state") Integer state, @Param("id") Long id);
+    void updateUserStateById(@Param("state") Integer state, @Param("id") Long id);
 }
