@@ -1,18 +1,19 @@
 package com.spingboot.demo.spingbootdemo.api;
 
-import com.spingboot.demo.spingbootdemo.bean.LoginBean;
+import com.spingboot.demo.spingbootdemo.body.LoginBody;
 import com.spingboot.demo.spingbootdemo.bean.User;
 import com.spingboot.demo.spingbootdemo.mark.Mark;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -25,24 +26,20 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginBean loginRequest) {
+    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody LoginBody loginRequest) {
         if (loginRequest.getName().isEmpty() || loginRequest.getPassword().isEmpty()) {
-            BaseResponse response = ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,false,Mark.ERROR_USER_INFO);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,null,Mark.ERROR_USER_INFO);
         }
 
-        User user = userService.getUserByName(loginRequest.getName());
-        if (user != null){
-            if (user.getPassword().compareTo(loginRequest.getPassword()) != 0) {
-                BaseResponse response = ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,false,Mark.ERROR_USER_INFO);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+        Optional<User> user = Optional.ofNullable(userService.getUserByName(loginRequest.getName()));
+        if (user.isPresent()){
+            if (user.get().getPassword().compareTo(loginRequest.getPassword()) != 0) {
+                return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,null,Mark.ERROR_USER_INFO);
             }
         }else{
-            BaseResponse response = ResponseUtils.responseError("该账号没有创建！",false,Mark.ERROR_NOT_USER);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseUtils.responseError("该账号没有创建！",null,Mark.ERROR_NOT_USER);
         }
 
-        BaseResponse response = ResponseUtils.responseSuccess("登录成功！",user);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseUtils.responseSuccess("登录成功！",(T) user);
     }
 }

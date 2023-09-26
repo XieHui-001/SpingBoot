@@ -1,6 +1,6 @@
-package com.spingboot.demo.spingbootdemo.bean;
+package com.spingboot.demo.spingbootdemo.body;
 
-public class LoginBean {
+public class RegisterBody {
     public String getName() {
         return name;
     }
@@ -17,16 +17,6 @@ public class LoginBean {
         this.password = password;
     }
 
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    private String name;
-    private String password;
-
-    private Long time;
+   private String name;
+   private String password;
 }
