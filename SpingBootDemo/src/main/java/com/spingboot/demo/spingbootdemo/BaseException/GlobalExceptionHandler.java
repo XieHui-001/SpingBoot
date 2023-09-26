@@ -14,14 +14,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGlobalException(Exception e) {
         // 处理全局异常
-        logger.error("GlobalException occurred: {}"+ e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        logger.error("GlobalException occurred: {"+e.getMessage()+"}");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error:"+e.getMessage());
     }
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<String> handleCustomException(CustomException e) {
         // 处理自定义异常
-        logger.error("CustomException occurred: {}"+ e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        logger.error("CustomException occurred: {"+e.getMessage()+"}");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request:"+e.getMessage());
     }
 }

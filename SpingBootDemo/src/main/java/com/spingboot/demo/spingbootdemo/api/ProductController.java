@@ -4,10 +4,10 @@ import com.spingboot.demo.spingbootdemo.body.BaseIdBody;
 import com.spingboot.demo.spingbootdemo.body.BasePageBody;
 import com.spingboot.demo.spingbootdemo.bean.Product;
 import com.spingboot.demo.spingbootdemo.mark.Mark;
-import com.spingboot.demo.spingbootdemo.redis.RedisService;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.ProductService;
+import com.spingboot.demo.spingbootdemo.service.UserService;
 import com.spingboot.demo.spingbootdemo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +20,18 @@ import java.util.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final UserService userService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @PostMapping("/query")
     public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody,
                                                                @RequestHeader(value = "token", required = false) String authToken) {
-        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken)){
+        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken,null)){
             return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
         }
 
@@ -49,7 +51,7 @@ public class ProductController {
     @PostMapping("/deleteById")
     public <T> ResponseEntity<BaseResponse<T>> deleteProductById(@RequestBody(required = false) BaseIdBody body,
                                                                  @RequestHeader(value = "token", required = false) String authToken){
-        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken)){
+        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken,null)){
             return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
         }
         if (body == null || body.getId() == null){

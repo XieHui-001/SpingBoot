@@ -11,6 +11,7 @@ import java.util.Map;
 @Component
 public class JwtUtils {
 
+    private JwtExpirationCallback callback;
     private static JwtUtils instance;
     public static JwtUtils getInstance(){
         if (instance == null){
@@ -19,7 +20,11 @@ public class JwtUtils {
         return instance;
     }
 
-    private final String secret = "U3BpbmcgYm9vdCBUZXN0"; // 替换为实际的密钥
+    public void setCallback(JwtExpirationCallback callback){
+        this.callback = callback;
+    }
+
+    private final String secret = "U3BpbmcgYm9vdCBUZXN0"; // 密钥
     private final long expiration = 3600 * 1000; // 令牌过期时间，以毫秒为单位
 
     // 生成令牌
@@ -37,7 +42,7 @@ public class JwtUtils {
     // 验证令牌
     public boolean validateToken(String token, String userId) {
         Claims claims = getClaimsFromToken(token);
-        return userId.equals(claims.getSubject()) && !isTokenExpired(token);
+        return userId.equals(claims.getSubject()) && !isTokenExpired(token,null);
     }
 
     // 从令牌中获取 Claims
@@ -49,8 +54,16 @@ public class JwtUtils {
     }
 
     // 检查令牌是否过期
-    public boolean isTokenExpired(String token) {
-        Date expirationDate = getClaimsFromToken(token).getExpiration();
+    public boolean isTokenExpired(String token,JwtExpirationCallback callback) {
+        Date expirationDate;
+        try {
+            expirationDate = getClaimsFromToken(token).getExpiration();
+        } catch (Exception exception) {
+            if (callback != null){
+                callback.onJwtTokenExpired(token);
+            }
+            return true;
+        }
         return expirationDate.before(new Date());
     }
 }

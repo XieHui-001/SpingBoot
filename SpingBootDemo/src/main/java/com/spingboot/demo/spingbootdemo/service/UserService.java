@@ -5,6 +5,8 @@ import com.spingboot.demo.spingbootdemo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -21,6 +23,15 @@ public class UserService {
      */
     public User getUserByName(String name){
         return userRepository.findUserByName(name);
+    }
+
+    /**
+     *
+     * @param id 用户ID
+     * @return 返回当前id 用户信息
+     */
+    public Optional<User> getUserById(Integer id){
+        return userRepository.findById(id.longValue());
     }
 
     /**
