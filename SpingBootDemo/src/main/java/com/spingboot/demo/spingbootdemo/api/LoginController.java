@@ -26,8 +26,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody LoginBody loginRequest) {
-        if (loginRequest.getName().isEmpty() || loginRequest.getPassword().isEmpty()) {
+    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody(required = false) LoginBody loginRequest) {
+        if (loginRequest == null||loginRequest.getName() == null || loginRequest.getPassword() == null) {
             return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,null,Mark.ERROR_USER_INFO);
         }
 

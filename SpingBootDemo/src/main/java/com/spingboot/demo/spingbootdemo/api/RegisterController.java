@@ -26,9 +26,8 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public <T> ResponseEntity<BaseResponse<T>> register(@RequestBody RegisterBody registerBody) {
-
-        if (registerBody.getName() == null || registerBody.getPassword() == null) {
+    public <T> ResponseEntity<BaseResponse<T>> register(@RequestBody(required = false) RegisterBody registerBody) {
+        if (registerBody == null ||registerBody.getName() == null || registerBody.getPassword() == null) {
             return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK, (T) Mark.ERROR_USER_LOGIN_CHECK, Mark.ERROR_USER_INFO);
         }
 

@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @PostMapping("/query")
-    public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody BasePageBody pageBody) {
+    public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody) {
         if (pageBody.getId() == null || pageBody.getSize() == null || pageBody.getSize() <= 0) {
             return ResponseUtils.responseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
         }
