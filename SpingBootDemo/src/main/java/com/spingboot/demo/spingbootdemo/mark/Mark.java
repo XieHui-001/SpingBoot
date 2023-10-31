@@ -10,6 +10,7 @@ public class Mark {
      */
     public static final Integer ERROR_TOKEN_EXPIRES = 1004;
     public static final Integer ERROR_DEFAULT = 1005;
+    public static final Integer ERROR_BASE = 1006; // 基础请求错误返回码
 
     public static final String ERROR_USER_INFO_MSG = "用户信息错误！";
     public static final String ERROR_USER_LOGIN_CHECK = "用户名或密码错误！";
