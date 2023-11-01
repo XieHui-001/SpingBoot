@@ -9,7 +9,9 @@ import com.spingboot.demo.spingbootdemo.redis.RedisService;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.UserService;
+import com.spingboot.demo.spingbootdemo.utils.Base64Utils;
 import com.spingboot.demo.spingbootdemo.utils.JwtUtils;
+import com.spingboot.demo.spingbootdemo.utils.Sha256Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,33 +33,34 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody(required = false) LoginBody loginRequest, @RequestHeader(value = "token", required = false) String authToken) {
-        if (loginRequest == null || loginRequest.getName() == null || loginRequest.getPassword() == null) {
-            return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK, null, Mark.ERROR_USER_INFO);
+    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody(required = false) LoginBody loginBody) {
+        if (loginBody == null || loginBody.getName() == null || loginBody.getPassword() == null || loginBody.getMark() == null) {
+            return ResponseUtils.responseError(Mark.ERROR_USER_PARAMETER, null, Mark.ERROR_USER_INFO);
+        }
+        String loginMark = loginBody.getName() + loginBody.getPassword() + Mark.LOGIN_USER_CHECK_MARK;
+        if (!Sha256Utils.checkLogin(loginMark,loginBody.getMark())){
+            return ResponseUtils.responseError("登录信息验证失败！", null, Mark.ERROR_BASE);
         }
 
-        Optional<User> user = Optional.ofNullable(userService.getUserByName(loginRequest.getName()));
+        Optional<User> user = Optional.ofNullable(userService.getUserByName(Base64Utils.endCode(loginBody.getName())));
         if (user.isPresent()) {
-            if (!user.get().getPassword().equals(loginRequest.getPassword())) {
+            if (!user.get().getPassword().equals(Base64Utils.endCode(loginBody.getPassword()))) {
                 return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK, null, Mark.ERROR_USER_INFO);
             }
         } else {
             return ResponseUtils.responseError("该账号不存在！", null, Mark.ERROR_NOT_USER);
         }
 
-        if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken,null)) {
-            redisService.saveData(RedisConfig.REDIS_BASE_TOKEN_KEY + user.get().getId(), JwtUtils.getInstance().generateToken(user.get().getId().toString()));
-        }else if (user.get().getState() == 1) {
-            return ResponseUtils.responseError("该账号已登录,请勿重复登录!", null, Mark.ERROR_USER_INFO);
-        }
+//        if (user.get().getState() == 1) {
+//            return ResponseUtils.responseError("该账号已登录,请勿重复登录!", null, Mark.ERROR_USER_INFO);
+//        }
+//        userService.updateUserState(1, user.get().getId());
 
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", user.get().getName());
         userMap.put("uid", user.get().getId());
-        userMap.put("state", user.get().getState());
-        userMap.put("token", redisService.getData(RedisConfig.REDIS_BASE_TOKEN_KEY + user.get().getId()));
+        userMap.put("token", JwtUtils.getInstance().generateToken(user.get().getId().toString()));
 
-        userService.updateUserState(1, user.get().getId());
 
         return ResponseUtils.responseSuccess("登录成功！", (T) userMap);
     }

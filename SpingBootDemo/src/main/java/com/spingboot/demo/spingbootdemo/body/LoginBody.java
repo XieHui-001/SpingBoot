@@ -17,16 +17,17 @@ public class LoginBody {
         this.password = password;
     }
 
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
 
     private String name;
     private String password;
 
-    private Long time;
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    private String mark;
 }
