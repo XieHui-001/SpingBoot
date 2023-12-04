@@ -14,14 +14,14 @@ import org.springframework.http.ResponseEntity;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse<String>> handleGlobalException(Exception e) {
+    public ResponseEntity<BaseResponse> handleGlobalException(Exception e) {
         // 处理全局异常
         logger.error("GlobalException occurred: {"+e.getMessage()+"}");
         return ResponseUtils.responseError(e.getMessage(),null, Mark.ERROR_BASE);
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<BaseResponse<String>> handleCustomException(CustomException e) {
+    public ResponseEntity<BaseResponse> handleCustomException(CustomException e) {
         // 处理自定义异常
         logger.error("CustomException occurred: {"+e.getMessage()+"}");
         return  ResponseUtils.responseError(e.getMessage(),null,Mark.ERROR_BASE);

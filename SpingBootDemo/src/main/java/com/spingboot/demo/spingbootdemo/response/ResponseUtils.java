@@ -11,10 +11,10 @@ public class ResponseUtils {
      * @param msg 成功消息
      * @param data 返回数据
      * @return
-     * @param <T>
+     * @param 
      */
-    public static <T> ResponseEntity<BaseResponse<T>> responseSuccess(String msg,T data){
-        BaseResponse<T> response = new BaseResponse<T>();
+    public static  ResponseEntity<BaseResponse> responseSuccess(String msg,Object data){
+        BaseResponse response = new BaseResponse();
         response.setData(data);
         response.setMsg(msg);
         response.setCode(Mark.API_SUCCESS);
@@ -27,11 +27,11 @@ public class ResponseUtils {
      * @param msg 失败消息
      * @param data 返回数据
      * @return
-     * @param <T>
+     * @param 
      */
 
-    public static <T> ResponseEntity<BaseResponse<T>> responseError(String msg, T data, Integer code) {
-        BaseResponse<T> response = new BaseResponse<>();
+    public static  ResponseEntity<BaseResponse> responseError(String msg, Object data, Integer code) {
+        BaseResponse response = new BaseResponse();
         response.setData(data);
         response.setMsg(msg);
         response.setCode(code);

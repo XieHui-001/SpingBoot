@@ -1,6 +1,6 @@
 package com.spingboot.demo.spingbootdemo.response;
 
-public class BaseResponse<T> {
+public class BaseResponse {
     public Integer getCode() {
         return code;
     }
@@ -9,11 +9,11 @@ public class BaseResponse<T> {
         this.code = code;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
@@ -26,6 +26,6 @@ public class BaseResponse<T> {
     }
 
     Integer code;
-    T data;
+    Object data;
     String msg;
 }

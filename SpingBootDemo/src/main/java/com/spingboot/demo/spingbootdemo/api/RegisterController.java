@@ -23,9 +23,9 @@ public class RegisterController {
     public RegisterController(UserService userService) {this.userService = userService;}
 
     @PostMapping("/register")
-    public <T> ResponseEntity<BaseResponse<T>> register(@RequestBody(required = false) RegisterBody registerBody) {
+    public  ResponseEntity<BaseResponse> register(@RequestBody(required = false) RegisterBody registerBody) {
         if (registerBody == null ||registerBody.getName() == null || registerBody.getPassword() == null) {
-            return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK, (T) Mark.ERROR_USER_LOGIN_CHECK, Mark.ERROR_USER_INFO);
+            return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK,  Mark.ERROR_USER_LOGIN_CHECK, Mark.ERROR_USER_INFO);
         }
 
         if (registerBody.getName().length() < 6) {
@@ -44,7 +44,7 @@ public class RegisterController {
             rgUser.setState(0);
             Optional<User> rgUserResponse = Optional.ofNullable(userService.register(rgUser));
             if (rgUserResponse.isPresent()) {
-                return ResponseUtils.responseSuccess("注册成功！", (T) rgUserResponse);
+                return ResponseUtils.responseSuccess("注册成功！",  rgUserResponse);
             }
         } else {
             return ResponseUtils.responseError("当前用户名称已被使用！", null, Mark.ERROR_USER_INFO);

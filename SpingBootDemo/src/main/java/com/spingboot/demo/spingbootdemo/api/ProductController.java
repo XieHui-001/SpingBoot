@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @PostMapping("/query")
-    public <T> ResponseEntity<BaseResponse<T>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody,
+    public  ResponseEntity<BaseResponse> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody,
                                                                @RequestHeader(value = "token", required = false) String authToken) {
         if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken,null)){
             return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
@@ -45,11 +45,11 @@ public class ProductController {
         map.put("list", productDataOptional.orElse(Collections.emptyList()));
         map.put("size", productDataOptional.map(List::size).orElse(0));
 
-        return ResponseUtils.responseSuccess("查询成功",(T) map);
+        return ResponseUtils.responseSuccess("查询成功", map);
     }
 
     @PostMapping("/deleteById")
-    public <T> ResponseEntity<BaseResponse<T>> deleteProductById(@RequestBody(required = false) BaseIdBody body,
+    public  ResponseEntity<BaseResponse> deleteProductById(@RequestBody(required = false) BaseIdBody body,
                                                                  @RequestHeader(value = "token", required = false) String authToken){
         if (authToken == null || JwtUtils.getInstance().isTokenExpired(authToken,null)){
             return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);

@@ -33,7 +33,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public <T> ResponseEntity<BaseResponse<T>> login(@RequestBody(required = false) LoginBody loginBody) {
+    public  ResponseEntity<BaseResponse> login(@RequestBody(required = false) LoginBody loginBody) {
         if (loginBody == null || loginBody.getName() == null || loginBody.getPassword() == null || loginBody.getMark() == null) {
             return ResponseUtils.responseError(Mark.ERROR_USER_PARAMETER, null, Mark.ERROR_USER_INFO);
         }
@@ -62,11 +62,11 @@ public class LoginController {
         userMap.put("token", JwtUtils.getInstance().generateToken(user.get().getId().toString()));
 
 
-        return ResponseUtils.responseSuccess("登录成功！", (T) userMap);
+        return ResponseUtils.responseSuccess("登录成功！",  userMap);
     }
 
     @PostMapping("/singOut")
-    public <T> ResponseEntity<BaseResponse<T>> singOut(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String token) {
+    public  ResponseEntity<BaseResponse> singOut(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String token) {
         if (token == null || JwtUtils.getInstance().isTokenExpired(token,null)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN, null, Mark.ERROR_TOKEN_EXPIRES);
         }
@@ -82,7 +82,7 @@ public class LoginController {
 
 
     @PostMapping("/deleteUser")
-    public <T> ResponseEntity<BaseResponse<T>> deleteUser(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
+    public  ResponseEntity<BaseResponse> deleteUser(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
         if (token == null || JwtUtils.getInstance().isTokenExpired(token,null)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_TOKEN_EXPIRES);
         }
