@@ -4,7 +4,6 @@ import com.spingboot.demo.spingbootdemo.body.BaseIdBody;
 import com.spingboot.demo.spingbootdemo.body.LoginBody;
 import com.spingboot.demo.spingbootdemo.bean.User;
 import com.spingboot.demo.spingbootdemo.mark.Mark;
-import com.spingboot.demo.spingbootdemo.redis.RedisConfig;
 import com.spingboot.demo.spingbootdemo.redis.RedisService;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
