@@ -36,13 +36,13 @@
 
         <dependency>
             <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
+            <artifactId>javax.persistence-api</artifactId> <!-- 持久性数据库映射-->
             <version>2.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId> <!--数据访问的配置和使用-->
         </dependency>
 
         <dependency>
@@ -69,7 +69,7 @@
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <artifactId>logback-classic</artifactId> <!--用于实现 Slf4j API-->
             <version>1.4.7</version>
         </dependency>
 
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version> <!-- 适用于Java 11及更高版本 -->
+            <version>2.3.1</version> <!-- Java 对象和 XML 数据之间进行映射 -->
         </dependency>
 
 
