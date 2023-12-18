@@ -17,4 +17,9 @@ public class Mark {
     public static final String ERROR_USER_LOGIN_CHECK = "用户名或密码错误！";
     public static final String ERROR_CHECK_TOKEN = "token 验证失败！";
     public static final String LOGIN_USER_CHECK_MARK = "HHHHHDDDDDLLLLLLSSS";
+
+    /**
+     * 用于Redis 用户数据缓存Key
+     */
+    public static final String ALL_USER_DATA_KEY = "ALL_USER_KEY";
 }

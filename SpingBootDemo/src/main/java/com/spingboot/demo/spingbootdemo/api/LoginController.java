@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class LoginController {
     private final UserService userService;
-    private final RedisService redisService;
+    public final RedisService redisService;
 
 
     @Autowired
@@ -42,9 +42,9 @@ public class LoginController {
             return ResponseUtils.responseError("登录信息验证失败！", null, Mark.ERROR_BASE);
         }
 
-        Optional<User> user = Optional.ofNullable(userService.getUserByName(Base64Utils.endCode(loginBody.getName())));
+        Optional<User> user = Optional.ofNullable(userService.getUserByName(Base64Utils.encrypt(loginBody.getName())));
         if (user.isPresent()) {
-            if (!user.get().getPassword().equals(Base64Utils.endCode(loginBody.getPassword()))) {
+            if (!user.get().getPassword().equals(Base64Utils.encrypt(loginBody.getPassword()))) {
                 return ResponseUtils.responseError(Mark.ERROR_USER_LOGIN_CHECK, null, Mark.ERROR_USER_INFO);
             }
         } else {
@@ -59,7 +59,7 @@ public class LoginController {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", user.get().getName());
         userMap.put("uid", user.get().getId());
-        userMap.put("token", JwtUtils.getInstance().generateToken(user.get().getId().toString()));
+        userMap.put("token", JwtUtils.generateToken(user.get().getId().toString()));
 
 
         return ResponseUtils.responseSuccess("登录成功！",  userMap);
@@ -67,7 +67,7 @@ public class LoginController {
 
     @PostMapping("/singOut")
     public  ResponseEntity<BaseResponse> singOut(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String token) {
-        if (token == null || JwtUtils.getInstance().isTokenExpired(token,null)){
+        if (token == null || JwtUtils.isTokenExpired(token,null)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN, null, Mark.ERROR_TOKEN_EXPIRES);
         }
 
@@ -83,7 +83,7 @@ public class LoginController {
 
     @PostMapping("/deleteUser")
     public  ResponseEntity<BaseResponse> deleteUser(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
-        if (token == null || JwtUtils.getInstance().isTokenExpired(token,null)){
+        if (token == null || JwtUtils.isTokenExpired(token,null)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_TOKEN_EXPIRES);
         }
 
@@ -98,5 +98,27 @@ public class LoginController {
         }else{
             return ResponseUtils.responseError("该用户不存在",null,Mark.ERROR_DEFAULT);
         }
+    }
+
+
+    @PostMapping("/getToken")
+    public Object getToken(@RequestBody(required = false) BaseIdBody body){
+        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).split(",");
+        boolean hasUser = false;
+        for (String uid : uidList) {
+            if (uid.equals(body.getId().toString())) {
+                hasUser = true;
+                break;
+            }
+        }
+
+        return  hasUser ? ResponseUtils.responseSuccess("获取token成功",JwtUtils.generateToken(body.getId().toString())) : ResponseUtils.responseError("用户不存在",null,Mark.ERROR_BASE);
+    }
+
+
+    @PostMapping("/testing")
+    public Object testing(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
+        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).split(",");
+      return JwtUtils.validateToken(token,body.getId().toString(),uidList) ? ResponseUtils.responseSuccess("token校验正常",null) : ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_BASE);
     }
 }

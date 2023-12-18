@@ -4,7 +4,12 @@ import java.util.Base64;
 
 public class Base64Utils {
 
-    public static String endCode(String value){
+    /**
+     * Base 64 加密
+     * @param value
+     * @return
+     */
+    public static String encrypt(String value){
         if (value == null || value.isEmpty()){
             return "";
         }
@@ -17,5 +22,15 @@ public class Base64Utils {
             throw new RuntimeException("base64编码解析失败");
         }
         return decodedString;
+    }
+
+    /**
+     * Base 64 解密
+     * @param originalString
+     * @return
+     */
+    public static String decrypt(String originalString) {
+        byte[] encodedBytes = Base64.getEncoder().encode(originalString.getBytes());
+        return new String(encodedBytes);
     }
 }

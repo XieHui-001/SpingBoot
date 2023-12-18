@@ -17,6 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse> handleGlobalException(Exception e) {
         // 处理全局异常
         logger.error("GlobalException occurred: {"+e.getMessage()+"}");
+        if (e.getMessage().contains("JWT expired")){
+            return ResponseUtils.responseError("Token已失效",null, Mark.ERROR_TOKEN_EXPIRES);
+        }
         return ResponseUtils.responseError(e.getMessage(),null, Mark.ERROR_BASE);
     }
 
