@@ -35,10 +35,6 @@ public class CheckController {
             throw new RuntimeException(e);
         }
 
-        try {
-            return ResponseUtils.responseError("Check Filed", "当前地区没有权限",Mark.ERROR_BASE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return ResponseUtils.responseError("Check Filed", "当前地区没有权限",Mark.ERROR_BASE);
     }
 }

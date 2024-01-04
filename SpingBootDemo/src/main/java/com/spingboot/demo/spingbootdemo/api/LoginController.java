@@ -11,8 +11,10 @@ import com.spingboot.demo.spingbootdemo.service.UserService;
 import com.spingboot.demo.spingbootdemo.utils.Base64Utils;
 import com.spingboot.demo.spingbootdemo.utils.JwtUtils;
 import com.spingboot.demo.spingbootdemo.utils.Sha256Utils;
+import org.hibernate.sql.ast.tree.expression.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class LoginController {
         this.redisService = redisService;
     }
 
+    @Async
     @PostMapping("/login")
     public  ResponseEntity<BaseResponse> login(@RequestBody(required = false) LoginBody loginBody) {
         if (loginBody == null || loginBody.getName() == null || loginBody.getPassword() == null || loginBody.getMark() == null) {
@@ -67,7 +70,7 @@ public class LoginController {
 
     @PostMapping("/singOut")
     public  ResponseEntity<BaseResponse> singOut(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String token) {
-        if (token == null || JwtUtils.isTokenExpired(token,null)){
+        if (token == null || JwtUtils.isTokenExpired(token)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN, null, Mark.ERROR_TOKEN_EXPIRES);
         }
 
@@ -83,7 +86,7 @@ public class LoginController {
 
     @PostMapping("/deleteUser")
     public  ResponseEntity<BaseResponse> deleteUser(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
-        if (token == null || JwtUtils.isTokenExpired(token,null)){
+        if (token == null || JwtUtils.isTokenExpired(token)){
             return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_TOKEN_EXPIRES);
         }
 
@@ -103,7 +106,7 @@ public class LoginController {
 
     @PostMapping("/getToken")
     public Object getToken(@RequestBody(required = false) BaseIdBody body){
-        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).split(",");
+        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).toString().split(",");
         boolean hasUser = false;
         for (String uid : uidList) {
             if (uid.equals(body.getId().toString())) {
@@ -118,7 +121,7 @@ public class LoginController {
 
     @PostMapping("/testing")
     public Object testing(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
-        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).split(",");
+        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).toString().split(",");
       return JwtUtils.validateToken(token,body.getId().toString(),uidList) ? ResponseUtils.responseSuccess("token校验正常",null) : ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_BASE);
     }
 }

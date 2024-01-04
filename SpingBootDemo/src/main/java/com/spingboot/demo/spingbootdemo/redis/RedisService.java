@@ -17,11 +17,11 @@ public class RedisService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void saveData(String key, String value) {
+    public void saveData(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public String getData(String key) {
+    public Object getData(String key) {
         return (String) redisTemplate.opsForValue().get(key);
     }
 }

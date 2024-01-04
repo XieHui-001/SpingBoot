@@ -7,6 +7,7 @@ import com.spingboot.demo.spingbootdemo.redis.RedisService;
 import com.spingboot.demo.spingbootdemo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,8 @@ public class UserSyncTask {
     @Autowired
     private UserRepository userRepository;
 
-    @Scheduled(fixedRate = 300000)
+    @Async
+    @Scheduled(fixedRate = 30000)
     public void syncUsers() {
         // 查询数据库，获取所有用户数据
         List<Integer> list = userRepository.findAllUser();

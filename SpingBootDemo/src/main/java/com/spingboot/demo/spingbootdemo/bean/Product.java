@@ -1,13 +1,11 @@
 package com.spingboot.demo.spingbootdemo.bean;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "product")
 public class Product {
     public Long getId() {
         return id;
