@@ -14,11 +14,8 @@ import java.util.*;
 @Component
 public class JwtUtils {
     private static final String secret = "U3BpbmcgYm9vdCBUZXN0"; // 密钥
+    private static final Integer expirationDay = 30; // token有效时间
 
-    /**
-     * token有效时间
-     */
-    private static final Integer expirationDay = 30;
     // 生成令牌
     public static String generateToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
@@ -52,9 +49,6 @@ public class JwtUtils {
         return checkUid(userId, idList) && userId.equals(claims.getSubject()) && !isTokenExpired(token);
     }
 
-    public static boolean validateToken2(String token) {
-        return !isTokenExpired(token);
-    }
 
     // 从令牌中获取 Claims
     public static Claims getClaimsFromToken(String token) {

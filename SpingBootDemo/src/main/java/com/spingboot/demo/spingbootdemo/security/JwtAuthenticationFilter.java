@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return ;
         }
 
-        if (JwtUtils.validateToken2(token)) {
+        if (!JwtUtils.isTokenExpired(token)) {
             Claims claims = JwtUtils.getClaimsFromToken(token);
             String uid = claims.getSubject();
             UserDetails userDetails = customerUserDetailsService.loadUserByUsername(uid);
