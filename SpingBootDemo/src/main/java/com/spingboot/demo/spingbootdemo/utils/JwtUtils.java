@@ -7,8 +7,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.netty.util.internal.StringUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -32,14 +34,19 @@ public class JwtUtils {
 
     /**
      * 验证令牌
+     *
      * @param token
      * @param userId
      * @param idList
      * @return
      */
-    public static boolean validateToken(String token, String userId,String[] idList) {
+    public static boolean validateToken(String token, String userId, String[] idList) {
         Claims claims = getClaimsFromToken(token);
-        return checkUid(userId,idList) && userId.equals(claims.getSubject()) && !isTokenExpired(token);
+        return checkUid(userId, idList) && userId.equals(claims.getSubject()) && !isTokenExpired(token);
+    }
+
+    public static boolean validateToken2(String token) {
+        return !isTokenExpired(token);
     }
 
     // 从令牌中获取 Claims
@@ -61,18 +68,27 @@ public class JwtUtils {
         return expirationDate.before(new Date());
     }
 
+    public static String getToken(HttpServletRequest httpServletRequest) {
+        final String bearerToken = httpServletRequest.getHeader("token");
+        if (StringUtils.hasText(bearerToken)) {
+            return bearerToken;
+        } // The part after "Bearer "
+        return null;
+    }
+
 
     /**
      * 检查缓存数据中是否存在该 用户ID
+     *
      * @param userId
      * @param list
      * @return
      */
-    public static boolean checkUid(String userId,String[] list){
+    public static boolean checkUid(String userId, String[] list) {
         boolean checkUid = false;
-        if (list != null){
-            for (String uid : list){
-                if (uid.equals(userId)){
+        if (list != null) {
+            for (String uid : list) {
+                if (uid.equals(userId)) {
                     checkUid = true;
                     break;
                 }

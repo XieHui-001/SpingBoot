@@ -15,7 +15,7 @@ public class Mark {
     public static final String ERROR_USER_INFO_MSG = "用户信息错误！";
     public static final String ERROR_USER_PARAMETER = "参数错误";
     public static final String ERROR_USER_LOGIN_CHECK = "用户名或密码错误！";
-    public static final String ERROR_CHECK_TOKEN = "token 验证失败！";
+    public static final String ERROR_CHECK_TOKEN = "token verification failed!";
     public static final String LOGIN_USER_CHECK_MARK = "HHHHHDDDDDLLLLLLSSS";
 
     /**

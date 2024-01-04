@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/product")
+@RequestMapping("/api/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -29,11 +29,7 @@ public class ProductController {
     }
 
     @PostMapping("/query")
-    public  ResponseEntity<BaseResponse> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody,
-                                                               @RequestHeader(value = "token", required = false) String authToken) {
-        if (authToken == null || JwtUtils.isTokenExpired(authToken)){
-            return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
-        }
+    public  ResponseEntity<BaseResponse> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody) {
 
         if (pageBody == null || pageBody.getId() == null || pageBody.getSize() == null || pageBody.getSize() <= 0) {
             return ResponseUtils.responseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
@@ -49,10 +45,7 @@ public class ProductController {
     }
 
     @PostMapping("/deleteById")
-    public  ResponseEntity<BaseResponse> deleteProductById(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String authToken){
-        if (authToken == null || JwtUtils.isTokenExpired(authToken)){
-            return ResponseUtils.responseError("Token 验证失败！", null, Mark.ERROR_TOKEN_EXPIRES);
-        }
+    public  ResponseEntity<BaseResponse> deleteProductById(@RequestBody(required = false) BaseIdBody body){
         if (body == null || body.getId() == null){
             return ResponseUtils.responseError("操作失败Id不能为空",null,Mark.ERROR_DEFAULT);
         }

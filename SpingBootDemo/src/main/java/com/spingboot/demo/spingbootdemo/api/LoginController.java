@@ -69,10 +69,7 @@ public class LoginController {
     }
 
     @PostMapping("/singOut")
-    public  ResponseEntity<BaseResponse> singOut(@RequestBody(required = false) BaseIdBody body, @RequestHeader(value = "token", required = false) String token) {
-        if (token == null || JwtUtils.isTokenExpired(token)){
-            return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN, null, Mark.ERROR_TOKEN_EXPIRES);
-        }
+    public  ResponseEntity<BaseResponse> singOut(@RequestBody(required = false) BaseIdBody body) {
 
         if (body == null || body.getId() == null || body.getId() <= 0) {
             return ResponseUtils.responseError("用户ID 错误", null, Mark.ERROR_DEFAULT);
@@ -85,11 +82,7 @@ public class LoginController {
 
 
     @PostMapping("/deleteUser")
-    public  ResponseEntity<BaseResponse> deleteUser(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
-        if (token == null || JwtUtils.isTokenExpired(token)){
-            return ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_TOKEN_EXPIRES);
-        }
-
+    public  ResponseEntity<BaseResponse> deleteUser(@RequestBody(required = false) BaseIdBody body){
         if (body == null || body.getId() == null || body.getId() <= 0){
             return ResponseUtils.responseError("用户ID错误",null,Mark.ERROR_DEFAULT);
         }
@@ -116,12 +109,5 @@ public class LoginController {
         }
 
         return  hasUser ? ResponseUtils.responseSuccess("获取token成功",JwtUtils.generateToken(body.getId().toString())) : ResponseUtils.responseError("用户不存在",null,Mark.ERROR_BASE);
-    }
-
-
-    @PostMapping("/testing")
-    public Object testing(@RequestBody(required = false) BaseIdBody body,@RequestHeader(value = "token",required = false) String token){
-        String[] uidList = redisService.getData(Mark.ALL_USER_DATA_KEY).toString().split(",");
-      return JwtUtils.validateToken(token,body.getId().toString(),uidList) ? ResponseUtils.responseSuccess("token校验正常",null) : ResponseUtils.responseError(Mark.ERROR_CHECK_TOKEN,null,Mark.ERROR_BASE);
     }
 }

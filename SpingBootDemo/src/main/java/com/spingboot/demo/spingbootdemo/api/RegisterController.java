@@ -41,7 +41,7 @@ public class RegisterController {
             User rgUser = new User();
             rgUser.setName(registerBody.getName());
             rgUser.setPassword(registerBody.getPassword());
-            rgUser.setState(0);
+            rgUser.setState(1);
             Optional<User> rgUserResponse = Optional.ofNullable(userService.register(rgUser));
             if (rgUserResponse.isPresent()) {
                 return ResponseUtils.responseSuccess("注册成功！",  rgUserResponse);
