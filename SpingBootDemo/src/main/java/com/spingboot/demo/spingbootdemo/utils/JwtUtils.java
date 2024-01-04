@@ -1,25 +1,24 @@
 package com.spingboot.demo.spingbootdemo.utils;
 
-import com.spingboot.demo.spingbootdemo.mark.Mark;
-import com.spingboot.demo.spingbootdemo.redis.RedisService;
-import com.spingboot.demo.spingbootdemo.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
 public class JwtUtils {
     private static final String secret = "U3BpbmcgYm9vdCBUZXN0"; // 密钥
 
-    private static final long expiration = 7 * 24 * 60 * 60 * 1000; // 过期时间为7天，单位为毫秒
-
+    /**
+     * token有效时间
+     */
+    private static final Integer expirationDay = 30;
     // 生成令牌
     public static String generateToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
@@ -27,9 +26,17 @@ public class JwtUtils {
                 .setClaims(claims)
                 .setSubject(userId)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(Date.from(expirationDate()))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    /**
+     * 获取token指定有效时间
+     * @return
+     */
+    private static Instant expirationDate(){
+        return Instant.now().plus(expirationDay, ChronoUnit.DAYS);
     }
 
     /**
