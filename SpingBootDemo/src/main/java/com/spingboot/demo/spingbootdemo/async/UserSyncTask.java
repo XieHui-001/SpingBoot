@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -23,14 +24,18 @@ public class UserSyncTask {
     @Autowired
     private UserRepository userRepository;
 
-    @Async
-    @Scheduled(fixedRate = 30000)
-    public void syncUsers() {
-        // 查询数据库，获取所有用户数据
-        List<Integer> list = userRepository.findAllUser();
-        redisService.saveData(Mark.ALL_USER_DATA_KEY,splitUid(list));
-        log.info("用户数据定时同步任务执行: "+ list.size());
-    }
+//    @Async
+//    @Scheduled(fixedRate = 30000)
+//    public void syncUsers() {
+//        // 查询数据库，获取所有用户数据
+//        List<Integer> list = userRepository.findAllUser();
+//        List<String> stringList = list.stream()
+//                .map(Object::toString)
+//                .collect(Collectors.toList());
+//
+//        redisService.addToList(Mark.ALL_USER_DATA_KEY,stringList);
+//        log.info("用户数据定时同步任务执行: "+ list.size());
+//    }
 
 
     private String splitUid(List<Integer> list){

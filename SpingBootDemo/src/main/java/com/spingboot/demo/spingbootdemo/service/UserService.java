@@ -48,4 +48,21 @@ public class UserService {
      * @param id    用户ID
      */
     public void updateUserState(Integer state, Long id){userRepository.updateUserStateById(state, id);}
+
+    /**
+     * 清空指定用户ID
+     * @param id
+     */
+    public void deleteUserToken(Long id){
+        userRepository.deleteUserToken(id);
+    }
+
+
+    /**
+     * 登录后将token更新
+     * @param id
+     */
+    public void updateUserToken(Long id, String token){
+        userRepository.updateUserToken(id,token);
+    }
 }

@@ -8,12 +8,13 @@ import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.ProductService;
 import com.spingboot.demo.spingbootdemo.service.UserService;
-import com.spingboot.demo.spingbootdemo.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/product")
@@ -28,11 +29,12 @@ public class ProductController {
         this.userService = userService;
     }
 
+    @Async
     @PostMapping("/query")
-    public  ResponseEntity<BaseResponse> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody) {
+    public CompletableFuture<ResponseEntity<BaseResponse>> queryAllProduct(@RequestBody(required = false) BasePageBody pageBody) {
 
         if (pageBody == null || pageBody.getId() == null || pageBody.getSize() == null || pageBody.getSize() <= 0) {
-            return ResponseUtils.responseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
+            return ResponseUtils.asyncResponseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
         }
 
         Optional<List<Product>> productDataOptional = Optional.ofNullable(productService.queryAllProductByPage(pageBody.getId(), 0, pageBody.getSize()));
@@ -41,7 +43,7 @@ public class ProductController {
         map.put("list", productDataOptional.orElse(Collections.emptyList()));
         map.put("size", productDataOptional.map(List::size).orElse(0));
 
-        return ResponseUtils.responseSuccess("查询成功", map);
+        return ResponseUtils.asyncResponseSuccess("查询成功", map);
     }
 
     @PostMapping("/deleteById")

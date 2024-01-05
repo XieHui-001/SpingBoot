@@ -20,4 +20,14 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u.id FROM User  u WHERE u.state = 1 ORDER BY u.id")
     List<Integer> findAllUser();
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.token =null WHERE u.id =:id")
+    void deleteUserToken(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.token =:token WHERE u.id =:id")
+    void updateUserToken(@Param("id") Long id, @Param("token") String token);
 }

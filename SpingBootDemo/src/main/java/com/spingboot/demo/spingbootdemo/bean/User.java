@@ -82,4 +82,14 @@ public class User implements UserDetails {
     private String name;
     private String password;
     private Integer state;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    private String token;
 }
