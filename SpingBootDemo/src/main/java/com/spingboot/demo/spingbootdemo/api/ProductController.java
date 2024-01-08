@@ -4,6 +4,8 @@ import com.spingboot.demo.spingbootdemo.body.BaseIdBody;
 import com.spingboot.demo.spingbootdemo.body.BasePageBody;
 import com.spingboot.demo.spingbootdemo.bean.Product;
 import com.spingboot.demo.spingbootdemo.mark.Mark;
+import com.spingboot.demo.spingbootdemo.mq.MessageSender;
+import com.spingboot.demo.spingbootdemo.mq.RabbitMQConfig;
 import com.spingboot.demo.spingbootdemo.response.BaseResponse;
 import com.spingboot.demo.spingbootdemo.response.ResponseUtils;
 import com.spingboot.demo.spingbootdemo.service.ProductService;
@@ -22,11 +24,14 @@ public class ProductController {
 
     private final ProductService productService;
     private final UserService userService;
+    private MessageSender messageSender;
+
 
     @Autowired
-    public ProductController(ProductService productService,UserService userService) {
+    public ProductController(ProductService productService,UserService userService,MessageSender messageSender) {
         this.productService = productService;
         this.userService = userService;
+        this.messageSender = messageSender;
     }
 
     @Async
@@ -37,6 +42,8 @@ public class ProductController {
             return ResponseUtils.asyncResponseError("基础分页参数错误", null, Mark.ERROR_DEFAULT);
         }
 
+
+//        messageSender.sendMessage("发送批量查询商品请求", RabbitMQConfig.routingKey1);
         Optional<List<Product>> productDataOptional = Optional.ofNullable(productService.queryAllProductByPage(pageBody.getId(), 0, pageBody.getSize()));
         Map<String, Object> map = new HashMap<>();
         map.put("time", new Date().getTime());

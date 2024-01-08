@@ -95,6 +95,22 @@ public class LoginController {
         }
     }
 
+    @PostMapping("/testDeleteUser")
+    public  ResponseEntity<BaseResponse> testDeleteUser(@RequestBody(required = false) BaseIdBody body){
+        if (body == null || body.getId() == null || body.getId() <= 0){
+            return ResponseUtils.responseError("用户ID错误",null,Mark.ERROR_DEFAULT);
+        }
+
+        Optional<User> delUser = userService.getUserById(body.getId());
+        if (delUser.isPresent()){
+            userService.deleteUser(delUser.get().getId());
+            redisService.remove(Mark.ALL_USER_DATA_KEY,delUser.get().getId().toString());
+            return ResponseUtils.responseSuccess("删除成功",null);
+        }else{
+            return ResponseUtils.responseError("该用户不存在",null,Mark.ERROR_DEFAULT);
+        }
+    }
+
 
     @PostMapping("/getToken")
     public Object getToken(@RequestBody(required = false) BaseIdBody body){
